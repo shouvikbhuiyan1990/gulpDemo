@@ -13,9 +13,19 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
-
+var babel = require('gulp-babel');
 var browserSync = require('browser-sync').create();
 
+
+//ES6 task
+gulp.task('esConv',function(){
+	return gulp.src('app/JS/**/*.js')
+		.pipe(babel({
+			presets: ['es2015']
+		}))
+		.pipe(concat('bundle.js'))
+		.pipe(gulp.dest('app/cjs'))
+})
 
 //browserSync config
 gulp.task('browserSyncTask',function(){
@@ -49,8 +59,9 @@ gulp.task('watch', ['array', 'of', 'tasks', 'to', 'complete','before', 'watch'],
 })
 *******/
 
-gulp.task('watch', ['browserSyncTask','build','fonts'], function (){
+gulp.task('watch', ['browserSyncTask','build','esConv','fonts'], function (){
   gulp.watch('app/SCSS/*.scss', ['build']); 
+  gulp.watch('app/JS/**/*.js', ['esConv']);
   // Other watchers
 })
 
